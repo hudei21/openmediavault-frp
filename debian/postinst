@@ -1,0 +1,49 @@
+#!/bin/sh
+
+set -e
+
+. /etc/default/openmediavault
+. /usr/share/openmediavault/scripts/helper-functions
+
+case "$1" in
+    configure)
+        SERVICE_XPATH_NAME="frp"
+        SERVICE_XPATH="/config/services/${SERVICE_XPATH_NAME}"
+
+        # Add the default configuration
+        if ! omv_config_exists "${SERVICE_XPATH}"; then
+			echo "Initialize configuration"
+            omv_config_add_element "/config/services" "${SERVICE_XPATH_NAME}"
+            omv_config_add_element "${SERVICE_XPATH}" "enable" "0"
+            omv_config_add_element "${SERVICE_XPATH}" "server_addr" "67.218.159.121"
+			omv_config_add_element "${SERVICE_XPATH}" "server_port" "5443"
+			omv_config_add_element "${SERVICE_XPATH}" "protocol" "kcp"
+			omv_config_add_element "${SERVICE_XPATH}" "privilege_token" "JNlN2gdG"
+			omv_config_add_element "${SERVICE_XPATH}" "type" "http"
+			omv_config_add_element "${SERVICE_XPATH}" "local_ip" "127.0.0.1"
+			omv_config_add_element "${SERVICE_XPATH}" "local_port" "80"
+			omv_config_add_element "${SERVICE_XPATH}" "use_gzip" "0"
+			omv_config_add_element "${SERVICE_XPATH}" "use_encryption" "0"
+			omv_config_add_element "${SERVICE_XPATH}" "privilege_mode" "0"
+			omv_config_add_element "${SERVICE_XPATH}" "pool_count" "20"		
+			omv_config_add_element "${SERVICE_XPATH}" "custom_domains" "www.xxx.com"
+        fi
+
+        # Activate package triggers. These triggers are only set during the
+        # package installation.
+        dpkg-trigger update-fixperms
+        dpkg-trigger update-locale
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0

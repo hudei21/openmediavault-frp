@@ -1,0 +1,34 @@
+#!/bin/sh
+
+set -e
+
+. /etc/default/openmediavault
+. /usr/share/openmediavault/scripts/helper-functions
+
+ProgramPath="/usr/local/bin/frp"
+NAME=frpc
+BIN=${ProgramPath}/${NAME}
+OMV_FRP_CONF_C=${ProgramPath}/frpc.conf
+SCRIPTNAME=/etc/init.d/${NAME}
+OMV_FRP_XPATH="/config/services/frp"
+
+cat <<EOF > ${OMV_FRP_CONF_C}
+[common]
+server_addr = $(omv_config_get "${OMV_FRP_XPATH}/server_addr")
+server_port = $(omv_config_get "${OMV_FRP_XPATH}/server_port")
+protocol = $(omv_config_get "${OMV_FRP_XPATH}/protocol")
+privilege_token = $(omv_config_get "${OMV_FRP_XPATH}/privilege_token")
+
+[web]
+type = $(omv_config_get "${OMV_FRP_XPATH}/type")
+local_ip = $(omv_config_get "${OMV_FRP_XPATH}/local_ip")
+local_port = $(omv_config_get "${OMV_FRP_XPATH}/local_port")
+use_gzip = $(omv_config_get "${OMV_FRP_XPATH}/use_gzip")
+use_encryption = $(omv_config_get "${OMV_FRP_XPATH}/use_encryption")
+pool_count = $(omv_config_get "${OMV_FRP_XPATH}/pool_count")
+privilege_mode = $(omv_config_get "${OMV_FRP_XPATH}/privilege_mode")
+custom_domains = $(omv_config_get "${OMV_FRP_XPATH}/custom_domains")
+EOF
+
+
+exit 0

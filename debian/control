@@ -1,0 +1,16 @@
+Source: openmediavault-frp
+Section: misc
+XB-Plugin-Section: frp
+Priority: optional
+Maintainer: OpenMediaVault Plugin Developers <plugins@omv-extras.org>
+Build-Depends: debhelper (>= 9.0.0)
+Standards-Version: 3.9.6
+Homepage: http://omv-extras.org/
+
+Package: openmediavault-frp
+Architecture: all
+Depends: openmediavault (>=2.0.0),
+Description: frp plugin for OpenMediaVault.
+ This plugin will frp the entire OpenMediaVault
+ system minus data drives for restoration in emergency
+ situations.
